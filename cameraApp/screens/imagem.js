@@ -38,15 +38,6 @@ export default function Imagem() {
 
       const selectedAsset = result.assets[0];
       const assetInfo = await MediaLibrary.getAssetInfoAsync(selectedAsset.assetId || selectedAsset.id);
-
-      if (assetInfo && assetInfo.location) {
-        const { latitude, longitude } = assetInfo.location;
-        await AsyncStorage.setItem("latitudeFoto", JSON.stringify(latitude));
-        await AsyncStorage.setItem("longitudeFoto", JSON.stringify(longitude));
-        console.log("Localização salva:", latitude, longitude);
-      } else {
-        console.log("A foto não possui dados de localização.");
-      }
     }
   };
 

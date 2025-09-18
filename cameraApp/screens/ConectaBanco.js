@@ -13,11 +13,10 @@ export default function ConectaBanco() {
         const database = await SQLite.openDatabaseAsync('BancoApp');
         setDb(database);
         await database.execAsync(`
-            CREATE TABLE IF NOT EXISTS fotosElocalizacao (
+            CREATE TABLE IF NOT EXISTS fotosEcoment (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 imagem BLOB NOT NULL,
-                latitude TEXT NOT NULL,
-                longitude TEXT NOT NULL
+                coment TEXT NOT NULL
             );
         `);
     };
@@ -26,28 +25,18 @@ export default function ConectaBanco() {
         if (!db) return;
 
         const base64Foto = await AsyncStorage.getItem('ultimaFoto');
-        let latitude = await AsyncStorage.getItem('latitudeFoto');
-        let longitude = await AsyncStorage.getItem('longitudeFoto');
-
-        if (!latitude){
-            latitude = await AsyncStorage.getItem('latitudeAtual');
-        }
-
-        if (!longitude){
-            longitude = await AsyncStorage.getItem('longitudeAtual');
-        }
+        let texto = await AsyncStorage.getItem('texto');
 
         if (!base64Foto) { alert("Nenhuma foto para salvar!"); return; }
-        if (!latitude) { alert("Latitude não encontrada!"); return; }
-        if (!longitude) { alert("Longitude não encontrada!"); return;}
+        if (!texto) { alert("texto não encontrada!"); return; }
 
         const statement = await db.prepareAsync(
-            'INSERT INTO fotosElocalizacao (imagem, latitude, longitude) VALUES ($imagem, $latitude, $longitude)'
+            'INSERT INTO fotosEcoment (imagem, coment) VALUES ($imagem, $coment)'
         );
 
         try {
-            await statement.executeAsync({ $imagem: base64Foto, $latitude: latitude, $longitude: longitude });
-            alert("Foto e localização salvas no banco!");
+            await statement.executeAsync({ $imagem: base64Foto, $coment: texto});
+            alert("Foto e comentario salvos");
         } finally {
             await statement.finalizeAsync();
         }
@@ -55,14 +44,14 @@ export default function ConectaBanco() {
 
     const pegarTudo = async () => {
         if (!db) return;
-        const allRows = await db.getAllAsync('SELECT * FROM fotosElocalizacao');
+        const allRows = await db.getAllAsync('SELECT * FROM fotosEcoment');
         setDados(allRows);
     };
 
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.button} onPress={salvar}>
-                <Text>💾 Salvar Foto + Localização</Text>
+                <Text>💾 Salvar Foto + texto</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={pegarTudo}>
@@ -75,9 +64,9 @@ export default function ConectaBanco() {
                 renderItem={({ item }) => (
                     <View style={{ marginBottom: 10, alignItems: 'center' }}>
                         <Text>Id: {item.id}</Text>
-                        <Text>Localização: </Text>
-                        <Text>Latitude: {item.latitude}</Text>
-                        <Text>Longitude: {item.longitude}</Text>
+                        <Text> </Text>
+                        <Text>texto: {item.coment}</Text>
+                        <Text></Text>
                         <Image
                             source={{ uri: `data:image/jpeg;base64,${item.imagem}` }}
                             style={{ width: 100, height: 100, borderRadius: 8 }}
