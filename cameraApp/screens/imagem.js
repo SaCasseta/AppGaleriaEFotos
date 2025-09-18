@@ -4,10 +4,11 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as MediaLibrary from "expo-media-library";
+import Swal from 'sweetalert2'
+
 
 export default function Imagem() {
   const [fotoUri, setFotoUri] = useState(null);
-
   const tirarFoto = async () => {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
     if (!granted) {
@@ -41,8 +42,10 @@ export default function Imagem() {
 
       if (assetInfo && assetInfo.location) {
         const { latitude, longitude } = assetInfo.location;
+        const { texto } = 
         await AsyncStorage.setItem("latitudeFoto", JSON.stringify(latitude));
         await AsyncStorage.setItem("longitudeFoto", JSON.stringify(longitude));
+        await AsyncStorage.setItem("texto", JSON.stringify(texto))
         console.log("Localização salva:", latitude, longitude);
       } else {
         console.log("A foto não possui dados de localização.");

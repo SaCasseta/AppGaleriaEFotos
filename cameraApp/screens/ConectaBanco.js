@@ -2,10 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Dialog from "react-native-dialog";
 
 export default function ConectaBanco() {
     const [db, setDb] = useState(null);
     const [dados, setDados] = useState([]);
+    const [visible, setVisible] = useState(false); // Estado para controlar a visibilidade do dialog
+    const [dialogMessage, setDialogMessage] = useState(''); // Mensagem do diálogo
+    const [textoGuardado, setPhotoText] = useState(''); // Mensagem do diálogo
+    const showAlert = () => {
+        setDialogMessage('Adicionar Texto:');
+        setVisible(true);
+    };
+
+    const hideAlert = () => {
+        setVisible(false);
+    };
 
     useEffect(() => { criarBanco(); }, []);
 
@@ -46,8 +58,9 @@ export default function ConectaBanco() {
         );
 
         try {
+            showAlert(); // Exibe o alerta
             await statement.executeAsync({ $imagem: base64Foto, $latitude: latitude, $longitude: longitude });
-            alert("Foto e localização salvas no banco!");
+            alert("Foto e localização salvas com sucesso!");
         } finally {
             await statement.finalizeAsync();
         }
@@ -85,6 +98,15 @@ export default function ConectaBanco() {
                     </View>
                 )}
             />
+
+            <Dialog.Container visible={visible}>
+                <Dialog.Title>Alerta</Dialog.Title>
+                <Dialog.Description>{dialogMessage}</Dialog.Description>
+                <Dialog.Input
+                onChangeText={setPhotoText}></Dialog.Input>
+                <Dialog.Button label="Cancelar" onPress={hideAlert} />
+                <Dialog.Button label="Confirmar" onPress={hideAlert} />
+            </Dialog.Container>
         </View>
     );
 }

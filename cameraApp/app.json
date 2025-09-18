@@ -34,6 +34,12 @@
         "projectId": "fdef153d-e11c-449b-bece-d03a47005714"
       }
     },
-    "owner": "scasseta0805"
+    "owner": "scasseta0805",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fdef153d-e11c-449b-bece-d03a47005714"
+    }
   }
 }
