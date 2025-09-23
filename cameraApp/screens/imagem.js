@@ -37,13 +37,17 @@ export default function Imagem() {
       await salvarFoto(uri);
 
       const selectedAsset = result.assets[0];
-      const assetInfo = await MediaLibrary.getAssetInfoAsync(selectedAsset.assetId || selectedAsset.id);
+      const assetInfo = await MediaLibrary.getAssetInfoAsync(
+        selectedAsset.assetId || selectedAsset.id
+      );
     }
   };
 
   const salvarFoto = async (uri) => {
     try {
-      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: "base64" });
+      const base64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: "base64",
+      });
       await AsyncStorage.setItem("ultimaFoto", base64);
     } catch (err) {
       console.log("Erro ao salvar foto:", err);
@@ -61,6 +65,11 @@ export default function Imagem() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 8 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 8,
+  },
   imagem: { width: 200, height: 200, marginTop: 10, borderRadius: 8 },
 });
